@@ -5,15 +5,19 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+  const isSandbox = window.location.hostname.includes("sandbox");
+  try {
     if (window.Pi) {
-      window.Pi.init({ version: "2.0", sandbox: true });
+      window.Pi.init({ version: "2.0", sandbox: isSandbox });
       console.log("✅ Pi SDK Initialized");
     } else {
       console.log("❌ Pi SDK not available");
     }
-  }, []);
-
-  const symbols = ["🍒", "🍋", "🔔", "🍊", "⭐", "💎"];
+  } catch (err) {
+    console.error("🚫 useEffect crash:", err);
+  }
+}, []);
+const symbols = ["🍒", "🍋", "🔔", "🍊", "⭐", "💎"];
 
   const getRandomSymbol = () =>
     symbols[Math.floor(Math.random() * symbols.length)];
