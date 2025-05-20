@@ -8,7 +8,11 @@ function App() {
   const isSandbox = window.location.hostname.includes("sandbox");
   try {
     if (window.Pi) {
-      window.Pi.init({ version: "2.0", sandbox: isSandbox });
+      window.Pi.init({
+        version: "2.0",
+        sandbox: isSandbox,
+        appId: "pi-slotgam", // thay bằng đúng slug app của bạn
+      });
       console.log("✅ Pi SDK Initialized");
     } else {
       console.log("❌ Pi SDK not available");
@@ -17,6 +21,7 @@ function App() {
     console.error("🚫 useEffect crash:", err);
   }
 }, []);
+
 const symbols = ["🍒", "🍋", "🔔", "🍊", "⭐", "💎"];
 
   const getRandomSymbol = () =>
