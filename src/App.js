@@ -30,6 +30,33 @@ function App() {
     });
   };
 
+  const pay = () => {
+    if (!window.Pi) return alert("Not in Pi Browser");
+
+    window.Pi.createPayment(
+      {
+        amount: 0.01,
+        memo: "Test transaction from Pi Slot Game",
+        metadata: { type: "test-payment" },
+      },
+      {
+        onReadyForServerApproval: (paymentId) => {
+          console.log("✔ Ready for approval:", paymentId);
+        },
+        onReadyForServerCompletion: (paymentId, txid) => {
+          console.log("✅ Payment complete:", txid);
+          alert("Thanh toán thành công!");
+        },
+        onCancel: (paymentId) => {
+          console.log("❌ Payment cancelled:", paymentId);
+        },
+        onError: (error, payment) => {
+          console.error("⚠ Payment error:", error);
+        },
+      }
+    );
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>🎰 Pi Slot Game</h1>
@@ -40,7 +67,12 @@ function App() {
       <br />
       <br />
       {user ? (
-        <p>👋 Welcome, {user.user.username}</p>
+        <>
+          <p>👋 Welcome, {user.user.username}</p>
+          <button onClick={pay} style={{ padding: "10px 20px", marginTop: "10px" }}>
+            Thanh toán Pi
+          </button>
+        </>
       ) : (
         <button onClick={login} style={{ padding: "10px 20px" }}>
           Login with Pi
