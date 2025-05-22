@@ -8,12 +8,13 @@ function App() {
   const isSandbox = window.location.hostname.includes("sandbox");
   try {
     if (window.Pi) {
-      window.Pi.init({
-        version: "2.0",
-        sandbox: isSandbox,
-        appId: "pi-slotgam", // thay bằng đúng slug app của bạn
-      });
-      console.log("✅ Pi SDK Initialized");
+      const isSandbox = window.location.hostname.includes("sandbox");
+window.Pi.init({
+  version: "2.0",
+  sandbox: isSandbox,
+  appId: "pi-slotgam" // ⚠️ Chính xác slug app đã đăng ký trên Pi Dev Portal
+});
+console.log("✅ Pi SDK Initialized");
     } else {
       console.log("❌ Pi SDK not available");
     }
