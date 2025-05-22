@@ -30,17 +30,27 @@ function App() {
   };
 
   const login = async () => {
-    try {
-      if (!window.Pi) return alert("Bạn phải chạy trong Pi Browser");
-
-      const auth = await window.Pi.authenticate(["username"]);
-      console.log("✅ Auth data:", auth);
-      setUser(auth);
-    } catch (err) {
-      console.error("❌ Login failed:", err);
-      alert("Login lỗi. Xem console log (F12) để biết chi tiết.");
+  try {
+    if (!window.Pi || !window.Pi.authenticate) {
+      return alert("⚠ Vui lòng mở bằng Pi Browser");
     }
-  };
+
+    const isSandbox = window.location.hostname.includes("sandbox");
+    await window.Pi.init({
+      version: "2.0",
+      sandbox: isSandbox,
+      appId: "betzone-cef4658e5e0d9dd7", // ← đúng slug đã đăng ký trên Dev Portal
+    });
+
+    console.log("✅ Pi SDK Initialized");
+
+    const auth = await window.Pi.authenticate(["username"]);
+    console.log("✅ Auth data:", auth);
+    setUser(auth);
+  } catch (err) {
+    console.error("❌ Login failed:", err);
+  }
+};
 
   const pay = () => {
     if (!window.Pi) return alert("Bạn phải chạy trong Pi Browser");
