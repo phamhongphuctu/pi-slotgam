@@ -1,8 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
   const [slots, setSlots] = useState(["🍒", "🍋", "🔔"]);
   const [user, setUser] = useState(null);
+
+  // Gọi init Pi SDK khi component mount
+  useEffect(() => {
+    const isSandbox = window.location.hostname.includes("sandbox");
+
+    if (window.Pi) {
+      window.Pi.init({
+        version: "2.0",
+        sandbox: isSandbox,
+        appId: "pi-slotgam", // ⚠️ Đảm bảo đúng slug đã đăng ký trên Pi Dev Portal
+      });
+      console.log("✅ Pi SDK Initialized");
+    } else {
+      console.warn("⚠ window.Pi not found. Bạn phải chạy trong Pi Browser.");
+    }
+  }, []);
 
   const symbols = ["🍒", "🍋", "🔔", "🍊", "⭐", "💎"];
 
@@ -15,26 +31,19 @@ function App() {
 
   const login = async () => {
     try {
-      if (!window.Pi) return alert("Not in Pi Browser");
-
-      const isSandbox = window.location.hostname.includes("sandbox");
-      await window.Pi.init({
-        version: "2.0",
-        sandbox: isSandbox,
-        appId: "pi-slotgam"
-      });
-      console.log("✅ Pi SDK Initialized");
+      if (!window.Pi) return alert("Bạn phải chạy trong Pi Browser");
 
       const auth = await window.Pi.authenticate(["username"]);
       console.log("✅ Auth data:", auth);
       setUser(auth);
     } catch (err) {
       console.error("❌ Login failed:", err);
+      alert("Login lỗi. Xem console log (F12) để biết chi tiết.");
     }
   };
 
   const pay = () => {
-    if (!window.Pi) return alert("Not in Pi Browser");
+    if (!window.Pi) return alert("Bạn phải chạy trong Pi Browser");
 
     window.Pi.createPayment(
       {
